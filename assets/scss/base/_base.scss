@@ -1,0 +1,24 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&display=swap');
+
+.noto-sans-arabic {
+    font-family: "Noto Sans Arabic", sans-serif;
+}
+
+ul{
+    list-style-type:none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+img{
+    object-fit: cover;
+    width: 100%;
+}
+
+.ms-107{
+    margin-left: 107px;
+}
+
+.ms-x-107{
+    margin-left: -107px;
+}
