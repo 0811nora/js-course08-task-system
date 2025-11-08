@@ -1,4 +1,7 @@
 .header{
-  background: #69F0AE;
-  font-size: 64px;
+  ul{
+    a:hover{
+    color: $accent;
+    }
+  }
 }

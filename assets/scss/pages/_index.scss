@@ -1,3 +1,26 @@
-.index-title {
-  font-size: 100px;
+
+.system-main{
+    .header-box{
+        height: 40px;
+        background-color: $black;
+    }
+    td{
+        vertical-align: middle;
+        a{
+            color: #0067CE;
+            font-weight: 500;
+        }
+    }
+    th,td{
+        padding: 16px;
+    }
+    table{
+        border: 2px solid $neutal;
+    }
 }
+
+.btn-primary:hover{
+    background-color: $accent;
+}
+
+

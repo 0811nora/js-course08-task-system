@@ -4,54 +4,58 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>index</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/css/iziToast.min.css">
+    <title>WR 後台系統</title>
   </head>
   <body>
-    <%- include('./layout/header'); -%>
 
-    <h1 class="index-title">我是首頁</h1>
+    <div class="system-main">
 
-    <div class="card" style="width: 18rem">
-      <img src="../assets/images/dog.jpg" class="card-img-top" alt="cat" />
-      <div class="card-body">
-        <h5 class="card-title">卡片元件</h5>
-        <p class="card-text">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque, odit, iusto odio assumenda alias id
-          nobis earum!
-        </p>
-      </div>
-    </div>
+      <!-- header -->
+      <section class="container">
+        <%- include('./layout/header'); -%>
+      </section>
 
-    <!-- Modal 按鈕 -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      打開 modal
-    </button>
+      <div class="header-box"></div>
 
-    <!-- Modal 元件 -->
-    <div
-      class="modal fade"
-      id="exampleModal"
-      tabindex="-1"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal 標題</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">內容</div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-            <button type="button" class="btn btn-primary">確定</button>
-          </div>
+      <!-- 圖表 -->
+      <section class="container py-12">
+        <h2 class="text-center mb-10 fw-medium">全產品類別營收比重</h2>
+        <div id="chart" class="chartArea">
+          
         </div>
-      </div>
+      </section>
+
+      <!-- 訂單資訊 -->
+      <section class="container py-12">
+
+        <div class="text-end mb-4">
+          <button class="btn btn-primary deleteAllBtn">刪除所有商品</button>
+        </div>
+
+        <table class="table">
+          <thead>
+            <tr class="">
+              <th scope="col">訂單編號</th>
+              <th scope="col">聯絡人</th>
+              <th scope="col">聯絡地址</th>
+              <th scope="col">電子郵件</th>
+              <th scope="col">訂單品項</th>
+              <th scope="col" class="text-center">訂單日期</th>
+              <th scope="col" class="text-center">訂單狀態</th>
+              <th scope="col" class="text-center">操作</th>
+            </tr>
+          </thead>
+          <tbody class="orderList"></tbody>
+        </table>
+      </section>
     </div>
 
-    <%- include('./layout/footer'); -%>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/izitoast@1.4.0/dist/js/iziToast.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
     <script type="module" src="../main.js"></script>
   </body>
 </html>
