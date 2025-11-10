@@ -30,16 +30,15 @@ function admGetOrder(){
             loopOrderData();
             rankList();
 
-
-            
         })
 }
+
+
 
 // 所有訂單資料渲染到畫面上
 function loopOrderData(){
     let str = ``;
     ordersData.forEach((item)=>{
-
         let today = new Date(item.createdAt * 1000);
         let showDate = `${today.getFullYear()}/${today.getMonth()+1}/${today.getDate()}`
         let payState = item.paid ? "已處理" : "未處理";
@@ -51,6 +50,7 @@ function loopOrderData(){
     orderList.innerHTML = str;
 
     delAloneBtn();
+    editState();
 
 }
 
@@ -68,12 +68,31 @@ function renderOrderList(item,payState,title,showDate){
             <td>${item.user.email}</td>
             <td>${title}</td>
             <td class="text-center"><p>${showDate}</p></td>
-            <td class="text-center"><a href="#" class="text-decoration-underline">${payState}</a></td>
+            <td class="text-center">
+                <button type="button" class="stateBtn btn border-0 text-decoration-underline fw-medium" data-bs-toggle="modal" data-bs-target="#stateBtn" data-id="${item.id}" style="color: #0067CE;">${payState}</button>
+            </td>
             <td class="text-center"><button class="btn btn-alert deleteAloneBtn" data-id="${item.id}">刪除</button></td>
         </tr>
+
+        <div class="modal fade" id="stateBtn" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-4">
+                <div class="modal-header border-0 ">
+                <h5 class="modal-title " id="exampleModalLabel">是否更改狀態?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-footer border-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="stateConfirmBtn btn btn-primary" data-bs-dismiss="modal">確認</button>
+                </div>
+            </div>
+            </div>
+        </div>
     `
 }
 
+
+// ---- 圖表資料變動邏輯 ----
 function rankList(){
     let rankobj = {}
     ordersData.forEach((item)=>{
@@ -109,6 +128,66 @@ function rankList(){
         renderChart();
     }
 }
+
+
+
+
+function editState(){
+
+    const stateBtn = document.querySelectorAll('.stateBtn');
+    const stateConfirmBtn = document.querySelectorAll('.stateConfirmBtn')
+
+    let id = "";
+    let changeState;
+
+    stateBtn.forEach((item)=>{
+        item.addEventListener('click',(e)=>{
+            id = e.target.dataset.id;
+            if(e.target.textContent === "未處理"){
+                changeState = true;
+            }else{
+                changeState = false
+            }
+        })
+    })
+    
+    
+    stateConfirmBtn.forEach((item)=>{
+        item.addEventListener('click',(e)=>{
+            ordersData.forEach((item)=>{
+                if(item.id === id){
+                    item.paid = changeState;
+                }
+            })
+            putOrderState(id,changeState);
+            
+        })      
+    })
+
+    // stateConfirmBtn.addEventListener('click', () => {
+    //     putOrderState(id, changeState);
+    // });
+}
+
+
+// ---- ［API：put］修改訂單狀態
+function putOrderState(id,changeState){
+    let data = {
+        "data": {
+            "id": id,
+            "paid": changeState
+        }
+    }
+    axios.put(`${baseUrl}/api/livejs/v1/admin/${api_path}/orders`,data,auth)
+        .then(()=>{
+            stateAlert();
+            loopOrderData();
+
+        })
+        .catch(err => console.log(err))
+}
+
+
 
 
 // ---- ［API：delete］刪除單一項目
@@ -160,6 +239,15 @@ function delAlert(){
     });
 }
 
+// ---- ［通知］訂單成功刪除的通知 -----
+function stateAlert(){
+    iziToast.show({
+        title: '訂單狀態已修改',
+        position: 'bottomLeft',
+        color: 'green',
+    });
+}
+
 // ---- chart 圖表區 ----
 function renderChart(){
 
@@ -171,12 +259,13 @@ function renderChart(){
             
         },
         color: {
-            pattern: ['#5434A7','#7b58ceff', '#9D7FEA','#DACBFF', ]
+            pattern: ['#542db8ff','#8559ebff', '#a98df0ff','#DACBFF', ]
         }
     });
 }
 
 
-
-
+/*
+1. 圖表資料的邏輯這一段，我是真的想到甚麼就寫看看，所以這一段邏輯好雜亂的感覺，希望助教可以告訴我是否有較常使用的方式來處理這一段。
+*/
 
