@@ -20,6 +20,8 @@ let ordersData = [];
 
 let rankResult = [];
 
+let categoryArr = [];
+
 
 
 // [API:GET] 取得所有訂單資料
@@ -94,20 +96,33 @@ function renderOrderList(item,payState,title,showDate){
 
 // ---- 圖表資料變動邏輯 ----
 function rankList(){
-    let rankobj = {}
+    let rankobj = {};
+    let categoryRank = {};
+
     ordersData.forEach((item)=>{
+
         item.products.forEach((i)=>{
             if(rankobj[i.title] === undefined){
                 rankobj[i.title] = i.price;
             }else{
                 rankobj[i.title] += i.price;
             }
+
+            if(categoryRank[i.category] === undefined){
+                categoryRank[i.category] = 1;
+            }else{
+                categoryRank[i.category] += 1;
+            }
         })
     })
+
+    console.log(categoryRank);
 
     
 
     let rankArr = Object.entries(rankobj); 
+    categoryArr = Object.entries(categoryRank)
+    console.log(categoryArr);
     rankArr.sort((a,b)=> b[1] - a[1]);
     
     let top3 = rankArr.slice(0,3);
@@ -121,16 +136,45 @@ function rankList(){
     rankResult.push(['其他', orderSumPrice]);
 
 
-    if(rankArr.length === 0){
-        let chartArea = document.querySelector('.chartArea');
-        chartArea.innerHTML = `<div class="text-center fs-2 py-10 mx-auto" style="background-color: #dacbff5e; width: 500px;">暫無數據</div>`
-    }else{
-        renderChart();
+    // if(rankArr.length === 0){
+    //     let chartArea2 = document.querySelector('.chartArea2');
+    //     chartArea2.innerHTML = `<div class="text-center fs-2 py-10 mx-auto" style="background-color: #dacbff5e; width: 500px;">暫無數據</div>`
+    // }else{
+    //     renderChart();
+    // }
+
+    // if(categoryArr.length === 0){
+    //     let chartArea1 = document.querySelector('.chartArea1');
+    //     chartArea1.innerHTML = `<div class="text-center fs-2 py-10 mx-auto" style="background-color: #cbe6ff5e; width: 500px;">暫無數據</div>`
+    // }else{
+    //     renderChart();
+    // }
+
+    checkAndRender('.chartArea1', categoryArr, '#cbe6ff5e');
+    checkAndRender('.chartArea2', rankArr, '#dacbff5e');
+
+
+}
+
+function checkAndRender(chartAreaSelector, dataArr, emptyBgColor) {
+    const chartArea = document.querySelector(chartAreaSelector);
+
+    if (dataArr.length === 0) {
+        chartArea.innerHTML = `
+        <div class="text-center fs-2 py-10 mx-auto"
+            style="background-color: ${emptyBgColor}; width: 500px;">
+            暫無數據
+        </div>`;
+        return;
     }
+
+    renderChart();
 }
 
 
 
+
+// ----- 點擊 [已處理 or 未處理] 時觸發 ------
 
 function editState(){
 
@@ -163,10 +207,6 @@ function editState(){
             
         })      
     })
-
-    // stateConfirmBtn.addEventListener('click', () => {
-    //     putOrderState(id, changeState);
-    // });
 }
 
 
@@ -229,7 +269,6 @@ function delAllBtn(){
 }
 
 
-
 // ---- ［通知］訂單成功刪除的通知 -----
 function delAlert(){
     iziToast.show({
@@ -251,9 +290,21 @@ function stateAlert(){
 // ---- chart 圖表區 ----
 function renderChart(){
 
-    let chart = c3.generate({
+    let chart1 = c3.generate({
+        bindto: '#chart-category',
         data: {
-            // iris data from R
+            columns: categoryArr,
+            type : 'pie',
+            
+        },
+        color: {
+            pattern: ['#2d47b8ff','#597bebff', '#8dacf0ff','#cbd7ffff', ]
+        }
+    });
+
+    let chart2 = c3.generate({
+        bindto: '#chart-product',
+        data: {
             columns: rankResult,
             type : 'pie',
             
@@ -262,10 +313,10 @@ function renderChart(){
             pattern: ['#542db8ff','#8559ebff', '#a98df0ff','#DACBFF', ]
         }
     });
+
 }
 
 
-/*
-1. 圖表資料的邏輯這一段，我是真的想到甚麼就寫看看，所以這一段邏輯好雜亂的感覺，希望助教可以告訴我是否有較常使用的方式來處理這一段。
-*/
+
+
 
